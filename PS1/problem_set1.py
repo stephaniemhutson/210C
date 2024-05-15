@@ -306,7 +306,9 @@ sixes = []
 colors = ['r', 'b', 'g', 'y', 'k']
 
 shocks = np.random.normal(size=T)
-# print(shocks)
+
+# In class we said that there is only one shock but this really doesn't
+# make any sense to me in this context.
 m = np.zeros((T, 1))
 m[0] = 1
 for t in range(1, T):
