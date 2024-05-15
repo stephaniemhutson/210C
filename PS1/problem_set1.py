@@ -347,7 +347,7 @@ for i, nu in enumerate(nus):
     ax[0, 2].plot(twos[i], label=nu, color=colors[i])
     ax[0, 2].set_title('Second one')
 
-    ax[0,2].set_title("Intentially left blank")
+    ax[0,3].set_title("Intentially left blank")
 
     ax[1, 0].plot(threes[i], label=nu, color=colors[i])
     ax[1, 0].set_title('Thrid one')
