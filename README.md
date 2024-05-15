@@ -10,3 +10,8 @@ libraries:
 To Run:
 
 `> python3 ./PS1/problem_set1.py`
+
+Collaborators:
+* Grace
+* Bridget
+* Sondre

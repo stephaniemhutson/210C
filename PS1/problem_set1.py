@@ -328,7 +328,7 @@ for dXdZ in dxdzs:
 
     # subtracting 5 from T and adding 2 to avoid weird edge effects.
     ones.append(X[0+2:T-5])
-    twos.append(X[T+2:2*T-5])
+    twos.append(X[T+2:2*T-10])
     threes.append(X[2*T+2:3*T-5])
     fours.append(X[3*T+2:4*T-5])
     fives.append(X[4*T+2:5*T-5])
@@ -356,7 +356,7 @@ for i, nu in enumerate(nus):
     ax[1, 1].set_title('Fourth one')
 
     ax[1, 2].plot(fives[i], label=nu, color=colors[i])
-    ax[1, 2].set_title('Fifth one')
+    ax[1, 2].set_title('Fifth one (Consumption?)')
 
     ax[1, 3].plot(sixes[i], label=nu, color=colors[i])
     ax[1, 3].set_title('Sixth one')
