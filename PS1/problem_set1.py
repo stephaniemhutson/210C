@@ -30,7 +30,6 @@ Z = sp.sparse.csr_matrix((T, T))
 
 
 # suppose theta = 0.05
-
 theta = 0.05
 
 
@@ -226,17 +225,18 @@ for nu in nus:
     # unknowns = [n, p]
     # exogenous = [m]
 
-    # firm blcok
-    firm_block = sp.sparse.bmat([f_phis])
+    # firm_block = sp.sparse.bmat([f_phis])
 
-    hh_block = sp.sparse.bmat([ll_phis, x_phis])
+    # hh_block = sp.sparse.bmat([ll_phis, x_phis])
 
-    bond_block = sp.sparse.bmat([eu_phis])
+    # bond_block = sp.sparse.bmat([eu_phis])
 
-    market_block = sp.sparse.bmat([mc_phis, mon_phis])
+    # market_block = sp.sparse.bmat([mc_phis, mon_phis])
 
 
     # y = [m, p, c, q]
+    # h = [mc mon]
+
 
     dHdY = sp.sparse.bmat([
             [mc_phis[0], mc_phis[1], mc_phis[2], mc_phis[3]],
@@ -262,27 +262,16 @@ for nu in nus:
     dYdU = sp.sparse.bmat([[dYFdU],[dYHdU]])
     dYdZ = sp.sparse.bmat([[dYFdZ],[dYHdZ]])
 
-    # print(dYdU.shape)
-    # print(dYdZ.shape)
-    # print(dHdY.shape)
     dHdU = dHdY @ dYdU
     dHdZ = dHdY @ dYdZ
 
 
     dUdZ = -sp.sparse.linalg.spsolve(dHdU, dHdZ)
-
-    # print(dYdU.shape)
-    # print(dUdZ.shape)
-    # print(dYdZ.shape)
-
     dYdZ = dYdU @ dUdZ + dYdZ
-
 
 
     dXdZ = sp.sparse.bmat([[dUdZ],
                           [dYdZ]])
-
-
 
 
     ###########
@@ -296,9 +285,6 @@ for nu in nus:
     assert sp.sparse.issparse(dHdZ) == True
     assert sp.sparse.issparse(dHdU) == True
 
-    # assert dHdU.shape == (2*T, 2*T)
-    # assert dHdZ.shape == (2*T, T)
-
     # compute the Jacobian of the model
     dUdZ = - sp.sparse.linalg.spsolve(dHdU, dHdZ)
     dYdZ = dYdU @ dUdZ + dYdZ
@@ -307,11 +293,7 @@ for nu in nus:
                           [dYdZ]])
 
     dxdzs.append(dXdZ)
-    # print(dXdZ.shape)
 
-# assert dUdZ.shape == (2*T, T)
-# assert dYdZ.shape == (5*T, T)
-# assert dXdZ.shape == (7*T, T)
 
 Xs = []
 ones = []
@@ -323,59 +305,63 @@ sixes = []
 
 colors = ['r', 'b', 'g', 'y', 'k']
 
+shocks = np.random.normal(size=T)
+# print(shocks)
+m = np.zeros((T, 1))
+m[0] = 1
+for t in range(1, T):
+    m[t] = rho_m * m[t-1] + shocks[t]
 # plot IRFs to Money supply shock with persistence rho
 for dXdZ in dxdzs:
-    shocks = np.random.normal(size=T)
-    # print(shocks)
 
-    m = np.zeros((T, 1))
-    m[0] = 1
-    for t in range(1, T):
-        m[t] = rho_m * m[t-1] + shocks[t]
+    #
+
 
     # compute impulse response functions
     X = dXdZ @ m
 
     Xs.append(X)
-    print(X.size)
 
+    # To be completely honest, I don't know which set of data is associated with which unknown.
+
+    # subtracting 5 from T and adding 2 to avoid weird edge effects.
     ones.append(X[0+2:T-5])
     twos.append(X[T+2:2*T-5])
-
     threes.append(X[2*T+2:3*T-5])
     fours.append(X[3*T+2:4*T-5])
     fives.append(X[4*T+2:5*T-5])
     sixes.append(X[5*T+2:6*T-5])
-    # unpack X into its components k,n,c,inv,y,wp,rk
-    # k = X[0:T]
-    # n = X[T:2*T]
-    # c = X[2*T:3*T]
-    # inv = X[3*T:4*T]
-    # y = X[4*T:5*T]
-    # wp = X[5*T:6*T]
-    # rk = X[6*T:7*T]
-
-    # cs.append X[]
 
 # plot impulse response functions
-fig, ax = plt.subplots(2, 2, figsize=(10, 8))
+fig, ax = plt.subplots(2, 4, figsize=(16, 8))
 ax[0, 0].plot(m, label='m')
 ax[0, 0].set_title('Money Shock')
-# ax[0, 1].plot(k, label='k')
-# ax[0, 1].set_title('Capital')
-for i, _ in enumerate(nus):
-    ax[1, 0].plot(fives[i], label='n', color=colors[i])
-    ax[1, 0].set_title('Labor')
-    ax[1, 1].plot(threes[i], label='c', color=colors[i])
-    ax[1, 1].set_title('Consumption')
-    # ax[2, 0].plot(inv, label='inv')
-    # ax[2, 0].set_title('Investment')
-    ax[0, 1].plot(sixes[i], label='y', color=colors[i])
-    ax[0, 1].set_title('Output')
-# ax[3, 0].plot(q, label='q')
-# ax[3, 0].set_title('Return to Capital')
-# ax[3, 1].plot(wp, label='wp')
-# ax[3, 1].set_title('Real Wage')
+
+
+fig.suptitle("Impact of money shock on endogenous variables.")
+for i, nu in enumerate(nus):
+    ax[0, 1].plot(ones[i], label=nu, color=colors[i])
+    ax[0, 1].set_title('First one (Prices?)')
+    ax[0, 2].plot(twos[i], label=nu, color=colors[i])
+    ax[0, 2].set_title('Second one')
+
+    ax[0,2].set_title("Intentially left blank")
+
+    ax[1, 0].plot(threes[i], label=nu, color=colors[i])
+    ax[1, 0].set_title('Thrid one')
+
+    ax[1, 1].plot(fours[i], label=nu, color=colors[i])
+    ax[1, 1].set_title('Fourth one')
+
+    ax[1, 2].plot(fives[i], label=nu, color=colors[i])
+    ax[1, 2].set_title('Fifth one')
+
+    ax[1, 3].plot(sixes[i], label=nu, color=colors[i])
+    ax[1, 3].set_title('Sixth one')
+    ax[1, 3].legend()
+
+
+
 plt.savefig('IRFs.png')
 plt.show()
 
