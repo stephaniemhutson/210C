@@ -236,38 +236,48 @@ for nu in nus:
     market_block = sp.sparse.bmat([mc_phis, mon_phis])
 
 
+    # y = [m, p, c, q]
 
     dHdY = sp.sparse.bmat([
-            [mc_phis[1], mc_phis[6], mc_phis[0]],
-            [mon_phis[1], mon_phis[6], mon_phis[0]]
+            [mc_phis[0], mc_phis[1], mc_phis[2], mc_phis[3]],
+            [mon_phis[0], mon_phis[1], mon_phis[2], mon_phis[3]]
         ])
 
     dYFdU = sp.sparse.bmat([[f_phis[1], f_phis[6]]])
     dYHdU = sp.sparse.bmat(
         [
             [ll_phis[1], ll_phis[6]],
-            [x_phis[1], x_phis[6]]
+            [x_phis[1], x_phis[6]],
+            [eu_phis[1], eu_phis[6]]
         ])
 
     dYFdZ = sp.sparse.bmat([[f_phis[0]]])
     dYHdZ = sp.sparse.bmat(
         [
             [ll_phis[0]],
-            [x_phis[0]]
+            [x_phis[0]],
+            [eu_phis[0]]
         ])
 
     dYdU = sp.sparse.bmat([[dYFdU],[dYHdU]])
     dYdZ = sp.sparse.bmat([[dYFdZ],[dYHdZ]])
 
-
+    # print(dYdU.shape)
+    # print(dYdZ.shape)
+    # print(dHdY.shape)
     dHdU = dHdY @ dYdU
     dHdZ = dHdY @ dYdZ
 
 
     dUdZ = -sp.sparse.linalg.spsolve(dHdU, dHdZ)
 
+    # print(dYdU.shape)
+    # print(dUdZ.shape)
+    # print(dYdZ.shape)
 
     dYdZ = dYdU @ dUdZ + dYdZ
+
+
 
     dXdZ = sp.sparse.bmat([[dUdZ],
                           [dYdZ]])
@@ -286,8 +296,8 @@ for nu in nus:
     assert sp.sparse.issparse(dHdZ) == True
     assert sp.sparse.issparse(dHdU) == True
 
-    assert dHdU.shape == (2*T, 2*T)
-    assert dHdZ.shape == (2*T, T)
+    # assert dHdU.shape == (2*T, 2*T)
+    # assert dHdZ.shape == (2*T, T)
 
     # compute the Jacobian of the model
     dUdZ = - sp.sparse.linalg.spsolve(dHdU, dHdZ)
@@ -309,6 +319,9 @@ twos = []
 threes = []
 fours = []
 fives = []
+sixes = []
+
+colors = ['r', 'b', 'g', 'y', 'k']
 
 # plot IRFs to Money supply shock with persistence rho
 for dXdZ in dxdzs:
@@ -324,13 +337,15 @@ for dXdZ in dxdzs:
     X = dXdZ @ m
 
     Xs.append(X)
+    print(X.size)
 
-    ones.append(X[0:T])
-    twos.append(X[T:2*T])
+    ones.append(X[0+2:T-5])
+    twos.append(X[T+2:2*T-5])
 
-    threes.append(X[2*T:3*T])
-    fours.append(X[3*T:4*T])
-    fives.append(X[4*T:5*T])
+    threes.append(X[2*T+2:3*T-5])
+    fours.append(X[3*T+2:4*T-5])
+    fives.append(X[4*T+2:5*T-5])
+    sixes.append(X[5*T+2:6*T-5])
     # unpack X into its components k,n,c,inv,y,wp,rk
     # k = X[0:T]
     # n = X[T:2*T]
@@ -343,19 +358,19 @@ for dXdZ in dxdzs:
     # cs.append X[]
 
 # plot impulse response functions
-fig, ax = plt.subplots(2, 2, figsize=(10, 10))
+fig, ax = plt.subplots(2, 2, figsize=(10, 8))
 ax[0, 0].plot(m, label='m')
 ax[0, 0].set_title('Money Shock')
 # ax[0, 1].plot(k, label='k')
 # ax[0, 1].set_title('Capital')
 for i, _ in enumerate(nus):
-    ax[1, 0].plot(fives[i], label='n')
+    ax[1, 0].plot(fives[i], label='n', color=colors[i])
     ax[1, 0].set_title('Labor')
-    ax[1, 1].plot(threes[i], label='c')
+    ax[1, 1].plot(threes[i], label='c', color=colors[i])
     ax[1, 1].set_title('Consumption')
     # ax[2, 0].plot(inv, label='inv')
     # ax[2, 0].set_title('Investment')
-    ax[0, 1].plot(twos[i], label='y')
+    ax[0, 1].plot(sixes[i], label='y', color=colors[i])
     ax[0, 1].set_title('Output')
 # ax[3, 0].plot(q, label='q')
 # ax[3, 0].set_title('Return to Capital')
