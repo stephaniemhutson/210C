@@ -367,7 +367,7 @@ for i, nu in enumerate(nus):
 
 
 
-plt.savefig('IRFs.png')
+plt.savefig('./PS1/IRFs.png')
 plt.show()
 
 
