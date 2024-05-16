@@ -13,7 +13,7 @@ beta = 0.99
 rho_m = 0.99
 p_star = 1
 a = 1
-T = 100 # time periods
+T = 500 # time periods
 
 # Note: updated 1 to .999
 nus = [ 0.25, 0.5, 0.999, 2, 4]
@@ -29,7 +29,8 @@ Z = sp.sparse.csr_matrix((T, T))
 
 
 
-# suppose theta = 0.05
+# suppose theta = 0.05. Why so small? This means that css is about 1/3, and thus nss is
+# about 1/3 which seems empirically reasonable.
 theta = 0.05
 
 
@@ -62,7 +63,6 @@ def get_blocks(nu):
 
     # given css and mss we can find xss
     xss = ((1-theta)*css**(1-nu) + theta*mss**(1-nu))**(1/(1-nu))
-
 
     # variable: m p c q w-p n y x
 
@@ -309,15 +309,18 @@ shocks = np.random.normal(size=T)
 
 # In class we said that there is only one shock but this really doesn't
 # make any sense to me in this context.
-m = np.zeros((T, 1))
-m[0] = 1
-for t in range(1, T):
-    m[t] = rho_m * m[t-1] + shocks[t]
+ms = []
+
+
 # plot IRFs to Money supply shock with persistence rho
-for dXdZ in dxdzs:
+for i, dXdZ in enumerate(dxdzs):
+    m = np.zeros((T, 1))
 
+    m[0] = 1
+    for t in range(1, T):
+        m[t] = rho_m * m[t-1]
     #
-
+    ms.append(m)
 
     # compute impulse response functions
     X = dXdZ @ m
@@ -336,12 +339,12 @@ for dXdZ in dxdzs:
 
 # plot impulse response functions
 fig, ax = plt.subplots(2, 4, figsize=(16, 8))
-ax[0, 0].plot(m, label='m')
-ax[0, 0].set_title('Money Shock')
 
 
 fig.suptitle("Impact of money shock on endogenous variables.")
 for i, nu in enumerate(nus):
+    ax[0, 0].plot(ms[i], label='m')
+    ax[0, 0].set_title('Money Shock')
     ax[0, 1].plot(ones[i], label=nu, color=colors[i])
     ax[0, 1].set_title('First one (Prices?)')
     ax[0, 2].plot(twos[i], label=nu, color=colors[i])
