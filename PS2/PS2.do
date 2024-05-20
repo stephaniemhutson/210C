@@ -1,6 +1,7 @@
 /**************************************************************
-ECON 210C: Week 7 Discussion Introduction to VARs
-John Juneau (jjuneau@ucsd.edu)
+ECON 210C: Problem Set 1
+Stephanie Hutson
+(Thank you John Juneau!)
 **************************************************************/
 
 /* 0) Preamble ***********************************************
