@@ -126,7 +126,7 @@ Stephanie Hutson
 	var INFL UNRATE FEDFUNDS, lags(1/4)
 		irf set var_results, replace
 		irf create var_result, step(20) set(var_results) replace
-		irf graph irf, impulse(INFL UNRATE FEDFUNDS) response(INFL UNRATE FEDFUNDS) byopts(yrescale) /// INFL UNRATE 
+		irf graph irf, impulse(INFL UNRATE FEDFUNDS) response(INFL UNRATE FEDFUNDS) byopts(yrescale) /// INFL UNRATE
 			yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
 			name(var_results)
 }	
@@ -184,10 +184,9 @@ save romer.dta, replace
 	var INFL UNRATE FEDFUNDS, lags(1/8) exog(L(0/12).resid_full)
 		irf set RR_var_results, replace
 		irf create var_result, step(12) set(RR_var_results) replace
-		irf graph irf, impulse(INFL UNRATE FEDFUNDS) response(INFL UNRATE FEDFUNDS) byopts(yrescale) /// INFL UNRATE 
+		irf graph irf, impulse(INFL UNRATE FEDFUNDS) response(INFL UNRATE FEDFUNDS) byopts(yrescale) /// INFL UNRATE
 			yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
 			name(RR_var_results)
-	
 }
 
 /*Constring SVAR ordered RR pi u R */{
