@@ -1,6 +1,13 @@
 # 210C
 
+## Virtual Environment
+ ```
+ . bin/activate
+ ```
+
 ## Problem Set 1
+
+Language: Python
 
 libraries:
 * numpy
@@ -15,3 +22,8 @@ Collaborators:
 * Grace
 * Bridget
 * Sondre
+
+
+## Problem Set 2
+
+Language: Stata
