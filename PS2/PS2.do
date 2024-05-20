@@ -150,8 +150,59 @@ Stephanie Hutson
 	
 }	
 
+/*Romer Shocks*/
+/*Merge data*/
+// merge 1:1 date dateq using data/RR_monetary_shock_monthly keep(resid)
 
+save vars.dta, replace
+use data/RR_monetary_shock_monthly.dta
 
+gen day=dofm(date)
+format day %td
+gen dateq=qofd(day)
+format dateq %tq
 
+drop date
+drop day
 
+collapse (mean) resid (mean) resid_romer (mean) resid_full, by(dateq)
+
+merge 1:1 dateq using vars
+/* Set values of shocks to zero before 1969 */
+replace resid_full = 0 if yofd(daten) <1969
+
+save romer.dta, replace
+
+// tsset date
+// var INFL UNRATE FEDFUNDS, lags(1/8)  exog(L(0/12).resid_full)
+// irf create myrirf, step(12) replace
+// irf graph dm, impulse(resid_full) irf(myrirf)
+// graph export question2b_plot.pdf, replace
+
+/* Construct irf from estimation equation */{
+	tsset dateq
+	var INFL UNRATE FEDFUNDS, lags(1/8) exog(L(0/12).resid_full)
+		irf set RR_var_results, replace
+		irf create var_result, step(12) set(RR_var_results) replace
+		irf graph irf, impulse(INFL UNRATE FEDFUNDS) response(INFL UNRATE FEDFUNDS) byopts(yrescale) /// INFL UNRATE 
+			yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
+			name(RR_var_results)
+	
+}
+
+/*Constring SVAR ordered RR pi u R */{
+	matrix A = (1,0,0,0 \ .,1,0,0 \ .,.,1,0 \ .,.,.,1)
+	matrix B = (.,0,0,0 \ 0,.,0,0 \ 0,0,.,0 \0,0,0,.)
+	svar resid_full INFL UNRATE FEDFUNDS, lags(1/4) aeq(A) beq(B)
+	irf create myRRsirf, set(myRRsirfs) step(20) replace
+	irf graph sirf, impulse(resid_full INFL UNRATE FEDFUNDS) response(resid_full INFL UNRATE FEDFUNDS) ///
+			yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
+			name(svar_rr_results_manual)
+
+	var resid_full INFL UNRATE FEDFUNDS, lags(1/4)
+	irf create myrrirf, set(myrrirfs) step(20) replace
+	irf graph oirf, impulse(resid_full INFL UNRATE FEDFUNDS) response(resid_full INFL UNRATE FEDFUNDS) ///
+			yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
+			name(svar_rr_results_oirf)
+}
 
