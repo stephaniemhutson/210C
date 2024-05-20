@@ -6,7 +6,7 @@ John Juneau (jjuneau@ucsd.edu)
 /* 0) Preamble ***********************************************
 ************************************************************/{
 	clear
-	cd "/Users/johnjuneauii/Library/CloudStorage/Dropbox/1. UCSD/TA Duties/Year 3/3) Spring - 210C/discussions/week7_sequencespace_vars/"
+	cd "/Users/stephaniehutson/Desktop/Economics/210C/PS2"
 	* Packages 
 	// 	ssc install blindschemes, replace
 	// 	ssc install GRSTYLE, replace
