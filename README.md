@@ -27,3 +27,6 @@ Collaborators:
 ## Problem Set 2
 
 Language: Stata
+
+Collaborators:
+* Sondre

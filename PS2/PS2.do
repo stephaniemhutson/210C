@@ -7,7 +7,7 @@ Stephanie Hutson
 /* 0) Preamble ***********************************************
 ************************************************************/{
 	clear
-	cd "/Users/stephaniehutson/Desktop/Economics/210C/PS2"
+	cd "~/Desktop/Economics/210C/PS2"
 	* Packages 
 	// 	ssc install blindschemes, replace
 	// 	ssc install GRSTYLE, replace
@@ -100,21 +100,26 @@ Stephanie Hutson
 	}
 	
 	/* d. Graph the data */ {
-	tsset daten
-	twoway (area recession daten, color("${fgcolor}") base(`min')) ///
-		(tsline FEDFUNDS, lc("${color1}") lp(solid) lw(medthick)) || ///
-		(tsline UNRATE, lc("${color2}") lp(dash) lw(medthick)) || ///
-		(tsline INFL, lc("${color3}") lp(dot) lw(medthick)) || ///
-		, ///
-		title("Monthly U.S. Macroeconomic Indicators, 1960-2023", c("${fgcolor}")) ///
-		tlabel(, format(%dCY) labc("${fgcolor}")) ttitle("") ///
-		yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
-		caption("Source: FRED." "Note: Shaded regions denote recessions.", c("${fgcolor}")) ///
-		ytitle("Percent", c("${fgcolor}")) ///
-		name(raw_data) ///
-		legend(on order(2 3 4) pos(6) bmargin(tiny) r(1))  //bplacement(ne) 
-// 	graph export "figures/fig1.pdf", replace
+		line FEDFUNDS  daten , title("Federal Interest Rate") xtitle("Date") ytitle("Interest Rate")
+// 		line INFL  daten , title("Inflation") xtitle("Date") ytitle("Interest Rate")
+// 		line UNRATE  daten , title("Unemployment") xtitle("Date") ytitle("Interest Rate")
 	}
+// 	{
+// 	tsset daten
+// 	twoway (area recession daten, color("${bgcolor}") base(`min')) ///
+// 		(tsline FEDFUNDS, lc("${color1}") lp(solid) lw(medthick)) || ///
+// 		(tsline UNRATE, lc("${color2}") lp(dash) lw(medthick)) || ///
+// 		(tsline INFL, lc("${color3}") lp(dot) lw(medthick)) || ///
+// 		, ///
+// 		title("Monthly U.S. Macroeconomic Indicators, 1960-2023", c("${fgcolor}")) ///
+// 		tlabel(, format(%dCY) labc("${fgcolor}")) ttitle("") ///
+// 		yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
+// 		caption("Source: FRED." "Note: Shaded regions denote recessions.", c("${fgcolor}")) ///
+// 		ytitle("Percent", c("${fgcolor}")) ///
+// 		name(raw_data) ///
+// 		legend(on order(2 3 4) pos(6) bmargin(tiny) r(1))  //bplacement(ne) 
+// // 	graph export "figures/fig1.pdf", replace
+// 	}
 }	
 
 /* 2) Quarterly VAR 
@@ -173,11 +178,7 @@ replace resid_full = 0 if yofd(daten) <1969
 
 save romer.dta, replace
 
-// tsset date
-// var INFL UNRATE FEDFUNDS, lags(1/8)  exog(L(0/12).resid_full)
-// irf create myrirf, step(12) replace
-// irf graph dm, impulse(resid_full) irf(myrirf)
-// graph export question2b_plot.pdf, replace
+
 
 /* Construct irf from estimation equation */{
 	tsset dateq
