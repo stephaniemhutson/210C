@@ -101,25 +101,25 @@ Stephanie Hutson
 	
 	/* d. Graph the data */ {
 		line FEDFUNDS  daten , title("Federal Interest Rate") xtitle("Date") ytitle("Interest Rate")
-// 		line INFL  daten , title("Inflation") xtitle("Date") ytitle("Interest Rate")
-// 		line UNRATE  daten , title("Unemployment") xtitle("Date") ytitle("Interest Rate")
+		line INFL  daten , title("Inflation") xtitle("Date") ytitle("Interest Rate")
+		line UNRATE  daten , title("Unemployment") xtitle("Date") ytitle("Interest Rate")
 	}
-// 	{
-// 	tsset daten
-// 	twoway (area recession daten, color("${bgcolor}") base(`min')) ///
-// 		(tsline FEDFUNDS, lc("${color1}") lp(solid) lw(medthick)) || ///
-// 		(tsline UNRATE, lc("${color2}") lp(dash) lw(medthick)) || ///
-// 		(tsline INFL, lc("${color3}") lp(dot) lw(medthick)) || ///
-// 		, ///
-// 		title("Monthly U.S. Macroeconomic Indicators, 1960-2023", c("${fgcolor}")) ///
-// 		tlabel(, format(%dCY) labc("${fgcolor}")) ttitle("") ///
-// 		yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
-// 		caption("Source: FRED." "Note: Shaded regions denote recessions.", c("${fgcolor}")) ///
-// 		ytitle("Percent", c("${fgcolor}")) ///
-// 		name(raw_data) ///
-// 		legend(on order(2 3 4) pos(6) bmargin(tiny) r(1))  //bplacement(ne) 
-// // 	graph export "figures/fig1.pdf", replace
-// 	}
+	{
+	tsset daten
+	twoway (area recession daten, color("${bgcolor}") base(`min')) ///
+		(tsline FEDFUNDS, lc("${color1}") lp(solid) lw(medthick)) || ///
+		(tsline UNRATE, lc("${color2}") lp(dash) lw(medthick)) || ///
+		(tsline INFL, lc("${color3}") lp(dot) lw(medthick)) || ///
+		, ///
+		title("Monthly U.S. Macroeconomic Indicators, 1960-2023", c("${fgcolor}")) ///
+		tlabel(, format(%dCY) labc("${fgcolor}")) ttitle("") ///
+		yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
+		caption("Source: FRED." "Note: Shaded regions denote recessions.", c("${fgcolor}")) ///
+		ytitle("Percent", c("${fgcolor}")) ///
+		name(raw_data) ///
+		legend(on order(2 3 4) pos(6) bmargin(tiny) r(1))  //bplacement(ne) 
+// 	graph export "figures/fig1.pdf", replace
+	}
 }	
 
 /* 2) Quarterly VAR 
@@ -205,4 +205,7 @@ save romer.dta, replace
 			yline(0, lstyle(foreground) lcolor("${fgcolor}") lp(dash)) ///
 			name(svar_rr_results_oirf)
 }
+
+/*Romer Romer shocks*/
+ list resid_full FEDFUNDS  date if yofd(daten) == 2001
 
