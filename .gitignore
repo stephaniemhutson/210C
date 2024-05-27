@@ -167,3 +167,4 @@ cython_debug/
 *.smcl
 *.stpr
 *.stsem
+*.irf

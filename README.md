@@ -30,3 +30,7 @@ Language: Stata
 
 Collaborators:
 * Sondre
+
+## Problem Set 3
+
+PDF of hand written answers
