@@ -1,0 +1,5 @@
+sequence-jacobian
+numpy
+matplotlib
+scipy
+numba
