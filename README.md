@@ -34,3 +34,12 @@ Collaborators:
 ## Problem Set 3
 
 PDF of hand written answers
+
+## Problem Set 4
+
+Language: Python 3
+
+`pip install -r requirements.txt`
+
+Collaborators:
+* Max
