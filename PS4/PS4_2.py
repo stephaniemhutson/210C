@@ -17,11 +17,11 @@ eps = 10
 phi_y = 0
 mu=1/(eps - 1)
 theta = 0.5
+e = np.exp(1)
 
 
 @simple
-def market_clear(gamma, beta, theta, eps, w, y, p, q, a, n, f1, f2):
-    mu = 1/(eps - 1)
+def market_clear(gamma, beta, theta, eps, w, y, p, q, a, n, f1, f2, mu):
     pi = p/p(-1)
     r = q/(p(+1)/p)
     c = y
@@ -35,9 +35,9 @@ def market_clear(gamma, beta, theta, eps, w, y, p, q, a, n, f1, f2):
 
 
 @simple
-def monetary_policy(beta, phi_pi, v, p):
+def monetary_policy(beta, phi_pi, v, p, e):
     pi = p/p(-1)
-    q = 1/beta*(pi**phi_pi)*np.exp(v)
+    q = 1/beta*(pi**phi_pi)*e**v
     return q
 
 
@@ -67,7 +67,7 @@ inputs = ['a', 'v']
 # steady state values
 calibration = {'a': 1, 'v': 0, 'yflex': 1, 'y': np.sqrt(1/(1+mu)), 'c': np.sqrt(1/(1+mu)), 'pstar': 1,
                'w': 1/(1+mu), 'q': 1/beta, 'mu': mu, 'varphi': varphi, 'chi':chi,
-               'gamma': gamma, 'beta': beta, 'phi_pi': phi_pi, 'kappa': kappa, 'eps':eps}
+               'gamma': gamma, 'beta': beta, 'phi_pi': phi_pi, 'kappa': kappa, 'eps':eps, 'e': e}
 
 # solve for steady state (we know it, but running this routine helps us check for mistakes)
 unknowns_ss = {'p': 1, 'n': np.sqrt(1/(1+mu)),
