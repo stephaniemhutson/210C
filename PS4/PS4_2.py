@@ -65,9 +65,11 @@ inputs = ['a', 'v']
 
 
 # steady state values
-calibration = {'a': 1, 'v': 0, 'yflex': 1, 'y': np.sqrt(1/(1+mu)), 'c': np.sqrt(1/(1+mu)), 'pstar': 1,
-               'w': 1/(1+mu), 'q': 1/beta, 'mu': mu, 'varphi': varphi, 'chi':chi,
-               'gamma': gamma, 'beta': beta, 'phi_pi': phi_pi, 'kappa': kappa, 'eps':eps, 'e': e}
+calibration = {'a': 1, 'v': 0, 'yflex': 1, 'pstar': 1,
+               'mu': mu, 'varphi': varphi, 'chi':chi,
+               'gamma': gamma, 'beta': beta,
+               'phi_pi': phi_pi, 'kappa': kappa, 'eps':eps,
+               'e': e}
 
 # solve for steady state (we know it, but running this routine helps us check for mistakes)
 unknowns_ss = {'p': 1, 'n': np.sqrt(1/(1+mu)),
